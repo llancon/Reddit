@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 20_161_028_145_442) do
   end
 
   create_table 'votes', force: :cascade do |t|
-    t.text     'vote'
-    t.integer 'link_id'
+    t.integer 'vote'
+    t.integer  'link_id'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
   end

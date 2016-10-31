@@ -4,7 +4,7 @@ class CreateLinks < ActiveRecord::Migration[5.0]
       t.text :title
       t.text :description
 
-      t.timestamps
+t.timestamps
     end
   end
 end
