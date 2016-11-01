@@ -1,16 +1,19 @@
 class LinksController < ApplicationController
-  before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :set_link, only: [:show, :edit, :update, :destroy, :upvote]
 
   # GET /links
   # GET /links.json
   def index
-    @links = Link.all
+    @links = Link.all.sort_by{|link| link.votes.count}.reverse
   end
 
   def upvote
-    set_link
-    @link.votes.create
-    redirect_to root_path
+    if current_user
+      @link.votes.create!(params[:user])
+      redirect_to root_path
+    else
+      render :new
+    end
   end
 
   # GET /links/1
@@ -56,6 +59,7 @@ class LinksController < ApplicationController
       end
     end
   end
+  
 
   # DELETE /links/1
   # DELETE /links/1.json
@@ -76,6 +80,6 @@ class LinksController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def link_params
-    params.require(:link).permit(:title, :description)
+    params.require(:link).permit(:title, :description, :name)
   end
 end
