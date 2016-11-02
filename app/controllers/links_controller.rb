@@ -9,7 +9,7 @@ class LinksController < ApplicationController
 
   def upvote
     if current_user
-      @link.votes.create!(params[:user])
+      @link.votes.create!(user: current_user)
       redirect_to root_path
     else
       render :new
@@ -34,32 +34,41 @@ class LinksController < ApplicationController
   # POST /links.json
   def create
     @link = Link.new(link_params)
-
+    @link.user = current_user
     respond_to do |format|
       if @link.save
-        format.html { redirect_to @link, notice: 'Link was successfully created.' }
-        format.json { render :show, status: :created, location: @link }
-      else
-        format.html { render :new }
-        format.json { render json: @link.errors, status: :unprocessable_entity }
+      tag_names = params[:link][:tag_names].split(",")
+      tag_names = tag_names.collect(&:strip)
+      tag_names.each do |name|
+        @link.topics << Tag.find_or_initialize_by(name: name)
       end
+      flash[:success] = "Your post is posted!"
+      redirect_to links_path
+    else
+      render :new
     end
   end
+  end
 
-  # PATCH/PUT /links/1
+
+  # end  # PATCH/PUT /links/1
   # PATCH/PUT /links/1.json
   def update
+    @link = current_user.links.new(link_params)
     respond_to do |format|
+
       if @link.update(link_params)
+        tag_names.each do |name|
+          @link.topics << Tag.find_or_initialize_by(name: name)
+        end
         format.html { redirect_to @link, notice: 'Link was successfully updated.' }
         format.json { render :show, status: :ok, location: @link }
       else
-        format.html { render :edit }
-        format.json { render json: @link.errors, status: :unprocessable_entity }
+        new
       end
     end
   end
-  
+
 
   # DELETE /links/1
   # DELETE /links/1.json

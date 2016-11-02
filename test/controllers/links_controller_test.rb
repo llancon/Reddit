@@ -33,10 +33,6 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should update link" do
-    patch link_url(@link), params: { link: { title: @link.title } }
-    assert_redirected_to link_url(@link)
-  end
 
   test "should destroy link" do
     assert_difference('Link.count', -1) do
