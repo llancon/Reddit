@@ -42,7 +42,7 @@ class LinksController < ApplicationController
         tag_names = params[:link][:tag_names].split(',')
         tag_names = tag_names.collect(&:strip)
         tag_names.each do |name|
-          @link.topics << Tag.find_or_initialize_by(name: name)
+          @link.tags << Tag.find_or_initialize_by(name: name)
         end
         flash[:success] = 'Your post is posted!'
         redirect_to links_path
@@ -59,7 +59,7 @@ class LinksController < ApplicationController
     respond_to do |format|
       if @link.update(link_params)
         tag_names.each do |name|
-          @link.topics << Tag.find_or_initialize_by(name: name)
+          @link.tags << Tag.find_or_initialize_by(name: name)
         end
         format.html { redirect_to @link, notice: 'Link was successfully updated.' }
         format.json { render :show, status: :ok, location: @link }
