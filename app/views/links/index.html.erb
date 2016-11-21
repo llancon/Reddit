@@ -3,8 +3,7 @@
 <body>
     <% if current_user %>
     <p>
-        Hi,
-        <%= current_user.username %>
+        Hi, <%= current_user.username %>
     </p>
     <%= link_to "New Link", new_link_path, class: "btn btn-primary" %>
     <%= button_to "Log out", session_path(id: "hey"), method: :delete, class: "btn btn-danger" %>
@@ -35,7 +34,7 @@
                 <td>
                     <%= link.votes.count %></td>
                 <td>
-                  <%=  puts link.title.inspect %>
+                  <!-- <%=  puts link.title.inspect %> -->
                   <%= link_to link.description, link %>
                 </td>
                 <td><%= link_to 'Show', link %></td>

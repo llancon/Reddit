@@ -9,8 +9,8 @@
 	user = User.create!(
 		username: Faker::Internet.user_name,
 		email_address: Faker::Internet.free_email,
-		password: Faker::Name.last_name
-		
+		password: "123"
+
 	)
 end
 
