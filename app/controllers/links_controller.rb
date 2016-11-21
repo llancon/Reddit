@@ -4,7 +4,7 @@ class LinksController < ApplicationController
   # GET /links
   # GET /links.json
   def index
-    @links = Link.all.sort_by{|link| link.votes.count}.reverse
+    @links = Link.all.sort_by { |link| link.votes.count }.reverse
   end
 
   def upvote
@@ -19,6 +19,8 @@ class LinksController < ApplicationController
   # GET /links/1
   # GET /links/1.json
   def show
+      @link.votes.create!(user: current_user)
+      redirect_to @link.title
   end
 
   # GET /links/new
@@ -35,28 +37,26 @@ class LinksController < ApplicationController
   def create
     @link = Link.new(link_params)
     @link.user = current_user
-    respond_to do |format|
+    respond_to do |_format|
       if @link.save
-      tag_names = params[:link][:tag_names].split(",")
-      tag_names = tag_names.collect(&:strip)
-      tag_names.each do |name|
-        @link.topics << Tag.find_or_initialize_by(name: name)
-      end
-      flash[:success] = "Your post is posted!"
-      redirect_to links_path
-    else
-      render :new
+        tag_names = params[:link][:tag_names].split(',')
+        tag_names = tag_names.collect(&:strip)
+        tag_names.each do |name|
+          @link.topics << Tag.find_or_initialize_by(name: name)
+        end
+        flash[:success] = 'Your post is posted!'
+        redirect_to links_path
+      else
+        render :new
+    end
     end
   end
-  end
-
 
   # end  # PATCH/PUT /links/1
   # PATCH/PUT /links/1.json
   def update
     @link = current_user.links.new(link_params)
     respond_to do |format|
-
       if @link.update(link_params)
         tag_names.each do |name|
           @link.topics << Tag.find_or_initialize_by(name: name)
@@ -68,7 +68,6 @@ class LinksController < ApplicationController
       end
     end
   end
-
 
   # DELETE /links/1
   # DELETE /links/1.json
@@ -89,6 +88,6 @@ class LinksController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def link_params
-    params.require(:link).permit(:title, :description, :name)
+    params.require(:link,:title, :description,).permit(:name)
   end
 end

@@ -6,7 +6,6 @@ class Link < ApplicationRecord
 
   def tag_names
     tags.collect(&:name).join(", ")
-
   end
 
 end
